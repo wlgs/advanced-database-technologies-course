@@ -1,2 +1,6 @@
 .DS_Store
 .idea
+edges.csv
+nodes.csv
+popularity_iw.csv
+taxonomy_iw.csv
