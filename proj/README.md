@@ -1,5 +1,7 @@
 # Projekt - zaawansowane technologie bazodanowe
 
+`as I am alone in my project, I need to accomplish 7-16 task only.`
+
 ## Wybór technologii
 
 Wybór padł na ArangoDB.
