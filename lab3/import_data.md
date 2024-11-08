@@ -16,6 +16,10 @@ entrances to buildings, you can assume that entrances are always on the first fl
 
 I propose the following model (will try to insert that into db)
 
+## AGH Map
+
+![AGH Map](./agh_map.jpg)
+
 ## Model schema
 
 ![model visualization](./schema_to_model.svg)
