@@ -35,6 +35,9 @@ SELECT ST_AsEWKT(ST_Transform(cords, 2178))
 FROM cities
 WHERE id = 1;
 
+UPDATE cities
+SET cords_geog = cords::geography;
+
 SELECT ST_Distance(
                (SELECT cords FROM cities WHERE id = 1),
                (SELECT cords FROM cities WHERE id = 2)
@@ -54,15 +57,90 @@ SELECT ST_DISTANCE(
        ST_DistanceSphere(
                (SELECT cords FROM cities WHERE id = 1),
                (SELECT cords FROM cities WHERE id = 2))
-           as distance_meters_from_sphere;
+           as distance_meters_from_sphere,
+       ST_DISTANCE(
+               (SELECT cords_geog FROM cities WHERE id = 1),
+               (SELECT cords_geog FROM cities WHERE id = 2), true)
+           as distance_meters_geography_spheorid,
+       ST_DISTANCE(
+               (SELECT cords_geog FROM cities WHERE id = 1),
+               (SELECT cords_geog FROM cities WHERE id = 2), false)
+           as distance_meters_geography_spheroid_false;
 
 -- ST_DistanceSphere:
 -- Uses a spherical earth and radius derived from the spheroid defined by the SRID.
 
 
-ALTER TABLE cities ADD column cords_geog geography
+with areas as (SELECT name,
+                      amenity,
+                      ST_GeometryType(geom)                       as geom_type,
+                      ST_Area(ST_Transform(geom, 2180)) / 1000000 as area_km2
+               FROM osm1.polygons
+               WHERE name LIKE '%AGH%'
+                  OR name LIKE '%Miasteczko Studenckie%'
+                  OR name LIKE '%Górniczo-%'
+               ORDER BY name)
+SELECT SUM(area_km2) as kampus_agh_area_km2
+from areas;
 
--- (SELECT cords FROM cities WHERE id = 1)::geography
+with areas as (SELECT name,
+                      amenity,
+                      ST_GeometryType(geom)                       as geom_type,
+                      ST_Area(ST_Transform(geom, 2180)) / 1000000 as area_km2
+               FROM osm1.polygons
+               WHERE name LIKE '%Miasteczko Studenckie%'
+               ORDER BY name)
+SELECT SUM(area_km2) as ms_agh_area_km2
+from areas;
 
--- do osm kryterium szersze, chcemy zaladowac nawet troche wiecej niz kampus agh (na przykład)
--- zaimportować do osm1 rowniez te przez refy zeby miec agh
+
+
+WITH areas AS (SELECT name,
+                      geom
+               FROM osm1.polygons
+               WHERE name LIKE '%AGH%'
+                  OR name LIKE '%Miasteczko Studenckie%'
+                  OR name LIKE '%Górniczo-%'),
+     points_of_interest AS (SELECT name as object_name,
+                                   amenity,
+                                   geom
+                            FROM osm1.points
+                            WHERE amenity IN ('pub', 'toilets')
+                            UNION ALL
+                            SELECT name              as object_name,
+                                   amenity,
+                                   ST_Centroid(geom) as geom
+                            FROM osm1.polygons
+                            WHERE amenity IN ('pub', 'toilets'))
+SELECT a.name as area_name,
+       p.amenity as object_type,
+       COALESCE(p.object_name, 'unnamed') as object_name
+FROM areas a
+         JOIN points_of_interest p
+              ON ST_Contains(a.geom, p.geom)
+ORDER BY a.name,
+         p.amenity,
+         p.object_name;
+
+
+
+WITH building_c2 AS (SELECT geom
+                     FROM osm1.polygons
+                     WHERE ref = 'C-2')
+SELECT p.node_id as osm_id,
+       p.name                                         as pub_name,
+       ST_Distance(
+               ST_Transform(p.geom, 2180),
+               ST_Transform(b.geom, 2180)
+       )                                              as distance,
+       ST_AsGeoJSON(ST_Transform(p.geom, 4326))::json as geom
+FROM osm1.points p
+         CROSS JOIN building_c2 b
+WHERE p.amenity = 'pub'
+  AND p.name IS NOT NULL
+  AND ST_DWithin(
+        ST_Transform(p.geom, 2180),
+        ST_Transform(b.geom, 2180),
+        1000
+      )
+ORDER BY distance;
