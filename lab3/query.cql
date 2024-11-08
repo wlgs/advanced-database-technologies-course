@@ -1,0 +1,46 @@
+CREATE (f24:Faculty {id: 24})
+CREATE (f46:Faculty {id: 46})
+CREATE (f1:Faculty {id: 1})
+CREATE (f7:Faculty {id: 7})
+CREATE (f12:Faculty {id: 12})
+CREATE (f11:Faculty {id: 11})
+CREATE (f27:Faculty {id: 27})
+CREATE (f28:Faculty {id: 28})
+CREATE (f29:Faculty {id: 29})
+CREATE (f41:Faculty {id: 41})
+CREATE (f21:Faculty {id: 21})
+CREATE (f22:Faculty {id: 22})
+
+
+CREATE (a0:ResearchAndTeachingFacilities {id: "a-0"})
+CREATE (a1:ResearchAndTeachingFacilities {id: "a-1"})
+CREATE (a2:ResearchAndTeachingFacilities {id: "a-2"})
+CREATE (ha1:ResearchAndTeachingFacilities {id: "h-a1"})
+CREATE (ha2:ResearchAndTeachingFacilities {id: "h-a2"})
+CREATE (c1:ResearchAndTeachingFacilities {id: "c-1"})
+
+
+CREATE (a0)-[:BELONGS_TO_FACULTY]->(f1)
+CREATE (a0)-[:BELONGS_TO_FACULTY]->(f46)
+CREATE (a0)-[:BELONGS_TO_FACULTY]->(f7)
+CREATE (a0)-[:INSIDE_WALK_FLOOR_0]->(a1)
+CREATE (a0)-[:INSIDE_WALK_FLOOR_ALL]->(a1)
+CREATE (a0)-[:OUSTIDE_WALK]->(a1)
+
+
+CREATE (a1)-[:BELONGS_TO_FACULTY]->(f12)
+CREATE (a1)-[:INSIDE_WALK_FLOOR_0]->(c1)
+CREATE (a1)-[:INSIDE_WALK_FLOOR_0]->(ha1)
+CREATE (a1)-[:INSIDE_WALK_FLOOR_ALL]->(ha1)
+CREATE (a1)-[:INSIDE_WALK_FLOOR_0]->(a2)
+CREATE (a1)-[:INSIDE_WALK_FLOOR_ALL]->(a2)
+CREATE (a1)-[:OUSTIDE_WALK]->(a2)
+
+
+CREATE (ha1)-[:INSIDE_WALK_FLOOR_0]->(a1)
+CREATE (ha1)-[:INSIDE_WALK_FLOOR_ALL]->(a1)
+CREATE (ha1)-[:INSIDE_WALK_FLOOR_0]->(ha2)
+CREATE (ha1)-[:INSIDE_WALK_FLOOR_ALL]->(ha2)
+CREATE (ha1)-[:INSIDE_WALK_FLOOR_0]->(a2)
+CREATE (ha1)-[:OUSTIDE_WALK]->(ha2)
+CREATE (ha1)-[:OUSTIDE_WALK]->(a0)
