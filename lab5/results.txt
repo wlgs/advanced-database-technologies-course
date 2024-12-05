@@ -1,0 +1,35 @@
+> make ex2
+gcc -o main main.c -lsqlite3
+gcc -o ex1 ex1.c
+gcc -o ex2_mem_single ex2.c -lsqlite3 -DSINGLE_TRANSACTION -DMEM # mem, single
+gcc -o ex2_file_single ex2.c -lsqlite3 -DSINGLE_TRANSACTION # file, single
+gcc -o ex2_mem_multiple ex2.c -lsqlite3 -DMEM # mem, multiple
+gcc -o ex2_file_multiple ex2.c -lsqlite3 # file, multiple
+./ex2_mem_single
+=== SINGLE TRANSACTION IN MEMORY ===
+[GEN]Elapsed time:       0.980650s
+Found: name_999999
+[SCAN]Elapsed time:      0.000025s
+Max mem usage:   146.531250MB
+
+./ex2_mem_multiple
+=== SEPARATE TRANSACTIONS IN MEMORY ===
+[GEN]Elapsed time:       1.414627s
+Found: name_999999
+[SCAN]Elapsed time:      0.000034s
+Max mem usage:   146.468750MB
+
+./ex2_file_single
+=== SINGLE TRANSACTION IN FILE ===
+ [GEN]Elapsed time:      0.968767s
+Found: name_999999
+[SCAN]Elapsed time:      0.000058s
+Max mem usage:   146.390625MB
+
+rm -f data.db
+./ex2_file_multiple
+=== SEPARATE TRANSACTIONS IN FILE ===
+ [GEN]Elapsed time:      181.281265s
+Found: name_999999
+[SCAN]Elapsed time:      0.000032s
+Max mem usage:   122.171875MB
