@@ -1,0 +1,60 @@
+=== AUTOCOMMIT TRANSACTION IN :memory: === 
+Journal mode: DELETE
+[GEN]Elapsed time: 1.3868 s
+[SCAN]Elapsed time: 0.0000 s
+
+=== NOAUTOCOMMIT TRANSACTION IN :memory: === 
+Journal mode: DELETE
+[GEN]Elapsed time: 0.8492 s
+[SCAN]Elapsed time: 0.0000 s
+
+=== AUTOCOMMIT TRANSACTION IN :memory: === 
+Journal mode: WAL
+[GEN]Elapsed time: 1.4061 s
+[SCAN]Elapsed time: 0.0000 s
+
+=== NOAUTOCOMMIT TRANSACTION IN :memory: === 
+Journal mode: WAL
+[GEN]Elapsed time: 0.8092 s
+[SCAN]Elapsed time: 0.0000 s
+
+=== AUTOCOMMIT TRANSACTION IN :memory: === 
+Journal mode: OFF
+[GEN]Elapsed time: 0.9089 s
+[SCAN]Elapsed time: 0.0000 s
+
+=== NOAUTOCOMMIT TRANSACTION IN :memory: === 
+Journal mode: OFF
+[GEN]Elapsed time: 0.8470 s
+[SCAN]Elapsed time: 0.0000 s
+
+=== AUTOCOMMIT TRANSACTION IN data.db === 
+Journal mode: DELETE
+[GEN]Elapsed time: 464.4392 s
+[SCAN]Elapsed time: 0.0002 s
+
+=== NOAUTOCOMMIT TRANSACTION IN data.db === 
+Journal mode: DELETE
+[GEN]Elapsed time: 1.3248 s
+[SCAN]Elapsed time: 0.0000 s
+
+=== AUTOCOMMIT TRANSACTION IN data.db === 
+Journal mode: WAL
+[GEN]Elapsed time: 132.7562 s
+[SCAN]Elapsed time: 0.0000 s
+
+=== NOAUTOCOMMIT TRANSACTION IN data.db === 
+Journal mode: WAL
+[GEN]Elapsed time: 1.2181 s
+[SCAN]Elapsed time: 0.0000 s
+
+=== AUTOCOMMIT TRANSACTION IN data.db === 
+Journal mode: OFF
+[GEN]Elapsed time: 28.0767 s
+[SCAN]Elapsed time: 0.0000 s
+
+=== NOAUTOCOMMIT TRANSACTION IN data.db === 
+Journal mode: OFF
+[GEN]Elapsed time: 0.8448 s
+[SCAN]Elapsed time: 0.0001 s
+

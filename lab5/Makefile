@@ -52,4 +52,4 @@ ex2: build
 	@rm -f data.db
 	@./ex2_file_multiple_delete
 	@rm -f data.db
-	@./ex2_file_multiple_wall
+	@./ex2_file_multiple_wal

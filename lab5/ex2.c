@@ -4,10 +4,6 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 
-// #define MEM
-// #define SINGLE_TRANSACTION
-// #define CREATE_INDEX
-
 struct Rec
 {
     int id;
@@ -52,16 +48,6 @@ int init_sqlite3_db(sqlite3 *db, struct Rec *rec, int record_count)
     {
         return 1;
     }
-#ifdef CREATE_INDEX
-    rc = sqlite3_exec(db,
-                      "CREATE INDEX idx_name ON inv (name);"
-                      "CREATE INDEX idx_desc ON inv (desc);",
-                      NULL, NULL, NULL);
-    if (handle_error(rc, db))
-    {
-        return 1;
-    }
-#endif
 
     c1 = clock();
 #ifdef SINGLE_TRANSACTION

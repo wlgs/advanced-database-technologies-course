@@ -1,0 +1,98 @@
+gcc -o main main.c -lsqlite3
+gcc -o ex1 ex1.c
+gcc -o ex2_mem_single_off ex2.c -lsqlite3 -DSINGLE_TRANSACTION -DMEM -DJOURNAL_OFF # mem, single
+gcc -o ex2_mem_single_delete ex2.c -lsqlite3 -DSINGLE_TRANSACTION -DMEM -DJOURNAL_DELETE # mem, single
+gcc -o ex2_mem_single_wal ex2.c -lsqlite3 -DSINGLE_TRANSACTION -DMEM -DJOURNAL_WAL # mem, single
+gcc -o ex2_file_single_off ex2.c -lsqlite3 -DSINGLE_TRANSACTION -DJOURNAL_OFF # file, single
+gcc -o ex2_file_single_delete ex2.c -lsqlite3 -DSINGLE_TRANSACTION -DJOURNAL_DELETE # file, single
+gcc -o ex2_file_single_wal ex2.c -lsqlite3 -DSINGLE_TRANSACTION -DJOURNAL_WAL # file, single
+gcc -o ex2_mem_multiple_off ex2.c -lsqlite3 -DMEM -DJOURNAL_OFF # mem, multiple
+gcc -o ex2_mem_multiple_delete ex2.c -lsqlite3 -DMEM -DJOURNAL_DELETE # mem, multiple
+gcc -o ex2_mem_multiple_wal ex2.c -lsqlite3 -DMEM -DJOURNAL_WAL # mem, multiple
+gcc -o ex2_file_multiple_off ex2.c -lsqlite3 -DJOURNAL_OFF # file, multiple
+gcc -o ex2_file_multiple_delete ex2.c -lsqlite3 -DJOURNAL_DELETE # file, multiple
+gcc -o ex2_file_multiple_wal ex2.c -lsqlite3 -DJOURNAL_WAL # file, multiple
+=== SINGLE TRANSACTION IN MEMORY ===
+Journal mode: OFF
+[GEN]Elapsed time:	 0.987988s
+Found: name_999999
+[SCAN]Elapsed time:	 0.000022s
+Max mem usage:	 146.453125MB
+
+=== SINGLE TRANSACTION IN MEMORY ===
+Journal mode: DELETE
+[GEN]Elapsed time:	 0.967133s
+Found: name_999999
+[SCAN]Elapsed time:	 0.000026s
+Max mem usage:	 146.171875MB
+
+=== SINGLE TRANSACTION IN MEMORY ===
+Journal mode: WAL
+[GEN]Elapsed time:	 0.951545s
+Found: name_999999
+[SCAN]Elapsed time:	 0.000021s
+Max mem usage:	 146.203125MB
+
+=== SEPARATE TRANSACTIONS IN MEMORY ===
+Journal mode: OFF
+[GEN]Elapsed time:	 1.442947s
+Found: name_999999
+[SCAN]Elapsed time:	 0.000021s
+Max mem usage:	 146.328125MB
+
+=== SEPARATE TRANSACTIONS IN MEMORY ===
+Journal mode: DELETE
+[GEN]Elapsed time:	 1.481854s
+Found: name_999999
+[SCAN]Elapsed time:	 0.000021s
+Max mem usage:	 147.031250MB
+
+=== SEPARATE TRANSACTIONS IN MEMORY ===
+Journal mode: WAL
+[GEN]Elapsed time:	 1.456857s
+Found: name_999999
+[SCAN]Elapsed time:	 0.000019s
+Max mem usage:	 147.312500MB
+
+=== SINGLE TRANSACTION IN FILE ===
+ Journal mode: OFF
+[GEN]Elapsed time:	 1.012062s
+Found: name_999999
+[SCAN]Elapsed time:	 0.000046s
+Max mem usage:	 146.656250MB
+
+=== SINGLE TRANSACTION IN FILE ===
+ Journal mode: DELETE
+[GEN]Elapsed time:	 0.991205s
+Found: name_999999
+[SCAN]Elapsed time:	 0.000054s
+Max mem usage:	 146.328125MB
+
+=== SINGLE TRANSACTION IN FILE ===
+ Journal mode: WAL
+[GEN]Elapsed time:	 1.023119s
+Found: name_999999
+[SCAN]Elapsed time:	 0.000039s
+Max mem usage:	 146.421875MB
+
+=== SEPARATE TRANSACTIONS IN FILE ===
+ Journal mode: OFF
+[GEN]Elapsed time:	 184.430603s
+Found: name_999999
+[SCAN]Elapsed time:	 0.000032s
+Max mem usage:	 122.093750MB
+
+=== SEPARATE TRANSACTIONS IN FILE ===
+ Journal mode: DELETE
+[GEN]Elapsed time:	 184.237717s
+Found: name_999999
+[SCAN]Elapsed time:	 0.000032s
+Max mem usage:	 122.406250MB
+
+=== SEPARATE TRANSACTIONS IN FILE ===
+ Journal mode: WAL
+[GEN]Elapsed time:	 7.508222s
+Found: name_999999
+[SCAN]Elapsed time:	 0.000023s
+Max mem usage:	 122.140625MB
+
