@@ -25,7 +25,9 @@ with open(PATH_POPULARITY, 'r', encoding='utf-8') as infile, open(PATH_POPULARIT
         # encode without touching the quotes
         key = urlencode(rows[0][1:-1], safe=SAFE_CHARACTERS)
         key = key.replace('~', '%7E')  # replace manually tilde character
+        key = key.replace(':', '%3A')  # replace manually colon character
         rows[0] = f'"{key}"'
+        rows.insert(1, f'"{key}"')
         # do not write duplicates (may happen)
         if (rows[0] == prevRows[0]):
             continue
@@ -65,7 +67,7 @@ with open(PATH_POPULARITY_TEMP, 'r', encoding='utf-8') as infile, open(PATH_POPU
                         quotechar='"', quoting=csv.QUOTE_NONNUMERIC, strict=True)
     for index, row in enumerate(inputs):
         if index == 0:
-            output.writerow(["_key", "popularity"])
+            output.writerow(["_key", "title", "popularity"])
         output.writerow(row)
 print(f" ✅ {time.time() - start:.2f}s.")
 
@@ -84,5 +86,4 @@ with open(PATH_TAXONOMY, 'r', encoding='utf-8') as infile, open(PATH_TAXONOMY_PR
         output.writerow(row)
 print(f" ✅ {time.time() - start:.2f}s.")
 
-os.remove(PATH_POPULARITY_TEMP)
 os.remove(PATH_TAXONOMY_TEMP)
