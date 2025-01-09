@@ -101,14 +101,6 @@ arangoimport --collection nodes \
     --on-duplicate ignore \
 ```
 
-```plaintext
-created:          951821
-warnings/errors:  0
-updated/replaced: 0
-ignored:          0
-lines read:       951823
-```
-
 ### edges
 
 ```bash
@@ -122,13 +114,7 @@ arangoimport --collection edges \
   --on-duplicate ignore \
 ```
 
-```plaintext
-created:          5483248
-warnings/errors:  288361
-updated/replaced: 0
-ignored:          0
-lines read:       5771611
-```
+### init script
 
 ```javascript
 db._useDatabase("wlgs");
@@ -145,9 +131,10 @@ graph._extendEdgeDefinitions(rel);
 
 [https://docs.arangodb.com/3.11/concepts/data-structure/documents/](https://docs.arangodb.com/3.11/concepts/data-structure/documents/)
 
-## task parameters
+## example task parameters
 
-task 16 Tourism_in_utta...
-task 17 Wikipedia_administration_by_MediaWiki 1880s_films
-task 18 Wikipedia_administration_by_MediaWiki 1880s_films
-task 10
+```bash
+python ./dbcli.py 14 Microeconomics Service_companies
+
+
+```
