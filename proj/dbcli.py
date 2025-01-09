@@ -296,35 +296,40 @@ def handle_task_14(db, start_key, end_key):
 
 def handle_task_15(db, start_key, end_key):
     """
-    Count all nodes that are in directed paths between two nodes.
-
-    Args:
-        db: ArangoDB database instance
-        start_key: Starting node key
-        end_key: Ending node key
-
-    Returns:
-        String containing the count of nodes in all paths
+    Count all unique nodes on all paths between two nodes found using handle_task_14.
     """
     aql_query = """
-    LET paths = (
-        FOR path IN ANY SHORTEST_PATH
-            @start_vertex TO @end_vertex
-            GRAPH 'graph'
-            RETURN path.vertices[*]._key
+    FOR path
+    IN 1..10 OUTBOUND K_PATHS 
+    @start_vertex TO @end_vertex
+    GRAPH 'graph'
+    OPTIONS {
+        uniqueVertices: 'path',
+    }
+    RETURN DISTINCT FLATTEN(
+        FOR vertex IN path.vertices
+            RETURN vertex._key
     )
-    RETURN LENGTH(UNIQUE(FLATTEN(paths)))
     """
-    cursor = db.aql.execute(
-        aql_query,
-        bind_vars={
-            'start_vertex': f'nodes/{start_key}',
-            'end_vertex': f'nodes/{end_key}'
-        }
-    )
-    count = next(cursor, 0)
+    try:
+        cursor = db.aql.execute(
+            aql_query,
+            bind_vars={
+                'start_vertex': f'nodes/{start_key}',
+                'end_vertex': f'nodes/{end_key}',
+            }
+        )
 
-    return f"Number of unique nodes in paths between {start_key} and {end_key}: {count}"
+        unique_nodes = set()
+
+        # Collect all unique keys from paths
+        for doc in cursor:
+            unique_nodes.update(doc)
+
+        return f"Total unique nodes across all paths: {len(unique_nodes)}"
+
+    except Exception as e:
+        return f"Error counting unique nodes: {str(e)}"
 
 
 def handle_task_16(db, node_key, radius):
