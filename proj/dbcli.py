@@ -241,7 +241,7 @@ def handle_task_13(db, node_key, new_popularity):
         return f"Error updating node: {str(e)}"
 
 
-def handle_task_14(db, start_key, end_key, max_paths=5):
+def handle_task_14(db, start_key, end_key):
     """
     Find all directed paths between two nodes using K_PATHS traversal.
     """
@@ -252,7 +252,6 @@ def handle_task_14(db, start_key, end_key, max_paths=5):
     GRAPH 'graph'
     OPTIONS {
         uniqueVertices: 'path',
-        maxPaths: @max_paths
     }
     RETURN {
         vertices: (
@@ -272,7 +271,6 @@ def handle_task_14(db, start_key, end_key, max_paths=5):
             bind_vars={
                 'start_vertex': f'nodes/{start_key}',
                 'end_vertex': f'nodes/{end_key}',
-                'max_paths': max_paths
             }
         )
         paths = [doc for doc in cursor]
