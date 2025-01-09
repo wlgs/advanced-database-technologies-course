@@ -241,31 +241,38 @@ def handle_task_13(db, node_key, new_popularity):
         return f"Error updating node: {str(e)}"
 
 
-def handle_task_14(db, start_key, end_key):
+def handle_task_14(db, start_key, end_key, max_paths=5):
     """
-    Find all directed paths between two nodes.
+    Find all directed paths between two nodes using K_PATHS traversal.
     """
     aql_query = """
-    FOR v, e, p IN 1..10 OUTBOUND @start_vertex
-        GRAPH 'graph'
-        FILTER v._key == @end_key
-        RETURN {
-            vertices: (
-                FOR vertex IN p.vertices
-                    RETURN {
-                        key: vertex._key,
-                        title: vertex.title
-                    }
-            ),
-            edges: LENGTH(p.edges)
-        }
+    FOR path
+    IN 1..10 OUTBOUND K_PATHS 
+    @start_vertex TO @end_vertex
+    GRAPH 'graph'
+    OPTIONS {
+        uniqueVertices: 'path',
+        maxPaths: @max_paths
+    }
+    RETURN {
+        vertices: (
+            FOR vertex IN path.vertices
+                RETURN {
+                    key: vertex._key,
+                    title: vertex.title
+                }
+        ),
+        edges: LENGTH(path.edges),
+        weight: path.weight
+    }
     """
     try:
         cursor = db.aql.execute(
             aql_query,
             bind_vars={
                 'start_vertex': f'nodes/{start_key}',
-                'end_key': end_key
+                'end_vertex': f'nodes/{end_key}',
+                'max_paths': max_paths
             }
         )
         paths = [doc for doc in cursor]
