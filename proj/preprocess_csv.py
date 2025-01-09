@@ -92,3 +92,4 @@ with open(PATH_TAXONOMY, 'r', encoding='utf-8') as infile, open(PATH_TAXONOMY_PR
 print(f" ✅ {time.time() - start:.2f}s.")
 
 os.remove(PATH_TAXONOMY_TEMP)
+os.remove(PATH_POPULARITY_TEMP)
