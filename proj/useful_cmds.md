@@ -134,7 +134,14 @@ graph._extendEdgeDefinitions(rel);
 ## example task parameters
 
 ```bash
+python ./dbcli.py 7
+python ./dbcli.py 8
+python ./dbcli.py 9
+python ./dbcli.py 10
+python ./dbcli.py 11 
+python ./dbcli.py 12 WeWork WeWork2 
+python ./dbcli.py 13 WeWork 1
 python ./dbcli.py 14 Microeconomics Service_companies
-
-
+python ./dbcli.py 15 Microeconomics Service_companies
+python ./dbcli.py 16 Microeconomics 5
 ```
