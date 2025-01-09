@@ -335,14 +335,6 @@ def handle_task_15(db, start_key, end_key):
 def handle_task_16(db, node_key, radius):
     """
     Count popularity sum of all nodes in a neighbourhood of given radius.
-
-    Args:
-        db: ArangoDB database instance
-        node_key: The key of the starting node
-        radius: The radius of the neighbourhood
-
-    Returns:
-        String containing the sum of popularities
     """
     aql_query = """
     LET neighborhood = (
