@@ -75,15 +75,20 @@ print(f" ✅ {time.time() - start:.2f}s.")
 print(f"⏳ Processing {PATH_TAXONOMY}...", end='', flush=True)
 start = time.time()
 with open(PATH_TAXONOMY, 'r', encoding='utf-8') as infile, open(PATH_TAXONOMY_PROCESSED, 'w') as outfile:
-    inputs = csv.reader(infile)
-    output = csv.writer(outfile, delimiter=',',
-                        quotechar='"', quoting=csv.QUOTE_NONNUMERIC, strict=True)
-    for index, row in enumerate(inputs):
-        if index == 0:
-            output.writerow(["_from", "_to"])
-        row[0] = f"nodes/{row[0]}"
-        row[1] = f"nodes/{row[1]}"
-        output.writerow(row)
+    with open(PATH_POPULARITY_PROCESSED, 'a', encoding='utf-8') as popularity:
+        inputs = csv.reader(infile)
+        output = csv.writer(outfile, delimiter=',',
+                            quotechar='"', quoting=csv.QUOTE_NONNUMERIC, strict=True)
+        output_popularity = csv.writer(popularity, delimiter=',',
+                                       quotechar='"', quoting=csv.QUOTE_NONNUMERIC, strict=True)
+        for index, row in enumerate(inputs):
+            if index == 0:
+                output.writerow(["_from", "_to"])
+            output_popularity.writerow([row[0], row[0], 0])
+            output_popularity.writerow([row[1], row[1], 0])
+            row[0] = f"nodes/{row[0]}"
+            row[1] = f"nodes/{row[1]}"
+            output.writerow(row)
 print(f" ✅ {time.time() - start:.2f}s.")
 
 os.remove(PATH_TAXONOMY_TEMP)

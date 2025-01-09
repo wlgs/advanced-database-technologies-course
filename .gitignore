@@ -4,3 +4,5 @@ edges.csv
 nodes.csv
 popularity_iw.csv
 taxonomy_iw.csv
+popularity_iw_temp.csv
+taxonomy_iw_temp.csv

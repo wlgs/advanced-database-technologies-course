@@ -1,7 +1,7 @@
 # Commands worth saving
 
 ```bash
-arangosh --server.database wlgs --server.username root --server.password test123
+arangosh --server.username root --server.password test123
 ```
 
 ## ArangoSH specific commands
@@ -97,7 +97,8 @@ arangoimport --collection nodes \
     --server.database wlgs \
     --server.endpoint http://localhost:8529 \
     --server.username root \
-    --server.password test123
+    --server.password test123 \
+    --on-duplicate ignore \
 ```
 
 ```plaintext
@@ -117,7 +118,8 @@ arangoimport --collection edges \
   --server.database wlgs \
   --server.endpoint http://localhost:8529 \
   --server.username root \
-  --server.password test123
+  --server.password test123 \
+  --on-duplicate ignore \
 ```
 
 ```plaintext
@@ -126,6 +128,17 @@ warnings/errors:  288361
 updated/replaced: 0
 ignored:          0
 lines read:       5771611
+```
+
+```javascript
+db._useDatabase("wlgs");
+var graph_module = require("@arangodb/general-graph");
+var graph = graph_module._create("graph");
+graph;
+
+graph._addVertexCollection("nodes");
+var rel = graph_module._relation("edge", ["nodes"], ["nodes"]);
+graph._extendEdgeDefinitions(rel);
 ```
 
 ## key information
