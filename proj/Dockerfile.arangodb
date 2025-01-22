@@ -1,0 +1,18 @@
+FROM arangodb:latest
+
+RUN apk update
+RUN apk add --no-cache \
+    python3\
+    py3-pip
+
+WORKDIR /app
+
+COPY ./dbcli /app/dbcli
+COPY ./dbcli.py /app/dbcli.py
+
+RUN chmod +x /app/dbcli
+RUN pip3 install --ignore-installed python-arango
+RUN echo 'from arango import ArangoClient' > test_installation.py
+RUN python3 test_installation.py
+
+CMD ["arangod"]

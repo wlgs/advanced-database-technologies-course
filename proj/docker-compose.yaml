@@ -1,6 +1,8 @@
 services:
     arangodb:
-        image: arangodb
+        build:
+            context: .
+            dockerfile: Dockerfile.arangodb
         container_name: arangodb
         environment:
             - ARANGO_ROOT_PASSWORD=test123
@@ -8,8 +10,30 @@ services:
             - "8529:8529"
         volumes:
             - arangodb_data:/var/lib/arangodb3
+        networks:
+            - arango-net
+        healthcheck:
+            test: ["CMD", "wget", "--quiet", "--spider", "http://127.0.0.1:8529/"]
+            interval: 1s
+            timeout: 5s
+            retries: 15
+
+    data_init:
+        image: arangodb
+        container_name: data_init
+        command: sh ./data/init.sh
+        volumes:
             - ./data:/data
+        depends_on:
+            arangodb:
+                condition: service_healthy
+        networks:
+            - arango-net
 
 volumes:
     arangodb_data:
         driver: local
+
+networks:
+    arango-net:
+        driver: bridge
