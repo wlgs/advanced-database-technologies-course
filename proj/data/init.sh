@@ -6,9 +6,13 @@ if [ $? == "0" ]; then
   exit 0
 fi
 
-arangosh --server.username root --server.password test123 --server.endpoint http://arangodb:8529 --javascript.execute /data/init.js && \
+tar -xzvf /app/data/popularity_iw.csv.tar.gz -C /app/data
+tar -xzvf /app/data/taxonomy_iw.csv.tar.gz -C /app/data
+python /app/data/preprocess_csv.py
+
+arangosh --server.username root --server.password test123 --server.endpoint http://arangodb:8529 --javascript.execute /app/data/init.js && \
 arangoimport --collection nodes \
-    --file "/data/nodes.csv" \
+    --file "/app/data/nodes.csv" \
     --type csv \
     --server.database wlgs \
     --server.endpoint http://arangodb:8529 \
@@ -17,7 +21,7 @@ arangoimport --collection nodes \
     --on-duplicate ignore \
     --overwrite false && \
 arangoimport --collection edges \
-  --file "/data/edges.csv" \
+  --file "/app/data/edges.csv" \
   --type csv \
   --server.database wlgs \
   --server.endpoint http://arangodb:8529 \
@@ -25,3 +29,5 @@ arangoimport --collection edges \
   --server.password test123 \
   --on-duplicate ignore \
   --overwrite false
+
+echo "[INFO]: Import completed."

@@ -19,11 +19,11 @@ services:
             retries: 15
 
     data_init:
-        image: arangodb
+        build:
+            context: .
+            dockerfile: Dockerfile.arangodb
         container_name: data_init
         command: sh ./data/init.sh
-        volumes:
-            - ./data:/data
         depends_on:
             arangodb:
                 condition: service_healthy
