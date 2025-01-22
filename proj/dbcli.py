@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from arango import ArangoClient
 import sys
 
