@@ -2,7 +2,7 @@
 
 ## Wybór technologii
 
-Wybór padł na ArangoDB.
+Wybór padł na ArangoDB. Jest to baza grafowa, open-source, napisana w C++.
 
 ### Licencja
 
@@ -111,7 +111,7 @@ data_init exited with code 0
 
 Następnie by wejsć do kontenera z bazą danych
 
-```
+```bash
 docker exec -it arangodb sh
 ```
 
@@ -217,7 +217,7 @@ arangosh --server.username root --server.password test123 --server.endpoint http
 
 Następnie po wykonaniu tych poleceń, baza gotowa jest otrzymywać dane.
 
-```
+```bash
 arangoimport --collection nodes \
     --file "/app/data/nodes.csv" \
     --type csv \
@@ -306,15 +306,47 @@ if __name__ == "__main__":
 
 Preprocessing działa poprawnie, dane importują się do bazy poprawnie, zapytania również wydają się poprawne. Zatem jestem w stanie stwierdzić, że udało mi się zaimplementować poprawnie cały wymagany system.
 
-To nad czym nie udało mi się uzyskać zachwalających rezultatów, to przede wszystkim multi-threading. Choć ArangoDB jest zoptymalizowane dosć dobrze i zapytania nie wykonują się tak długo, to na moim sprzęcie nie udało mi się korzystać z więcej niż 1 rdzenia logicznego w zapytaniach.
+To nad czym nie udało mi się uzyskać zachwalających rezultatów, to przede wszystkim multi-threading. Choć ArangoDB jest zoptymalizowane dosć dobrze i zapytania nie wykonują się tak długo, to na moim sprzęcie nie udało mi się korzystać z więcej niż 1 rdzenia logicznego w zapytaniach. Wizualizacja, choć jako moduł dostępna tylko w Community Edition, również nie dała mi pozytywnych rezultatów. Ciężko mi było zwizualizować konkretne dane. Wyswietlanie wierzchołków grafu ograniczamy głębokoscią poszukiwań i ich liczbą jednoczesnie wyswietlaną na ekranie - dla większych parametrów wizualizacja się zacina (ewentualnie nie ładuje) i wyswietla mało interesujących, odległych sąsiadów.
 
 ## Instrukcja krok po kroku jak odtworzyć wyniki
 
+1. Uruchomić cały system
+
+      ```docker compose```
+
+2. Poczekać na komunikat z kontenera `db_init`
+
+      ```db_init | [INFO]: Import completed.```
+
+3. Wejsć do shella kontenera z bazą danych
+
+      ```docker exec -it arangodb sh```
+
+4. W shellu kontenera znajdziemy się w katalogu z dostępnym executable `dbcli`
+
+      ```./dbcli 16 Microeconomics 5```
+
 ## Samoocena: należy omówić efektywnosć
+
+ArangoDB swietnie radzi sobie z zapytaniami o scieżki. Mamy możliwosć z korzystania z
+
+- [k paths](https://docs.arangodb.com/3.13/aql/graphs/k-paths/)
+- [k shortest paths](https://docs.arangodb.com/3.13/aql/graphs/k-shortest-paths/)
+- [shortest path](https://docs.arangodb.com/3.13/aql/graphs/shortest-path/)
+- [all shortest paths](https://docs.arangodb.com/3.13/aql/graphs/all-shortest-paths/)
+
+Nie musimy implementować również podstawowych algorytmów taki jak np. BFS. Możliwosci przechodzenia po grafie są szczegółowo omówione [tutaj](https://docs.arangodb.com/3.13/aql/graphs/traversals/).
 
 ## Strategie przyszłego łagodzenia zidentyfikowanych niedociągnięć
 
-## Zalecane parametry dla narzędzia `dbcli`
+Z możliwosci dalszych postępów nad projektem, na pewno zidentyfikowałbym:
+
+- wprowadzenie multi-threadingu - niektóre zapytania korzystają tylko i wyłacznie z jednego rdzenia logicznego, podjąłem próby ingerencji w ten problem poprzez ustawienie liczby rdzeni w konfiguracji samego ArangoDB, jednakże bez powodzenia
+- wdrożenie indeksów - przy imporcie kolekcji krawędzi i wierzchołków, ArangoDB sam tworzy odpowiednie indeksy i choć te domyslne robią robotę (wiedzę o wykorzystanych indeksach możemy uzyskać wywołując metodę `getExtra()` na obiekcie wyniku zapytania), możliwe byłoby przyspieszenie, conajmniej niektórych zapytań, stosując dodatkowe, wyspecjalizowane indeksy
+
+Natomiast z bezposrednich wniosków, które od razu nasunęły mi się podczas prac nad projektem to przede wszystkim najszybsze przejście do prototypowania i rozpoczęcie badania możliwości i ograniczeń zapytań - bo przecież to jest najistotniejsze. Ja podszedłem do projektu kaskadowo - implementacja importu i preprocessingu, następnie praca nad danymi wewnątrz bazy. Teraz uważam to za spory błąd.
+
+## [Dodatek] Zalecane parametry dla narzędzia `dbcli`
 
 ```bash
 ./dbcli.py 7

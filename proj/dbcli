@@ -437,7 +437,7 @@ if __name__ == "__main__":
         print("Usage: dbcli.py <task_id> [args...]")
         sys.exit(1)
 
-    client = ArangoClient(hosts="http://localhost:8529")
+    client = ArangoClient(hosts="http://localhost:8529", request_timeout=60*60)
     db = client.db("wlgs", username="root", password="test123")
 
     task_id = int(sys.argv[1])
