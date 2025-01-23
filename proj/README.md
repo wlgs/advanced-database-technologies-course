@@ -337,6 +337,32 @@ ArangoDB swietnie radzi sobie z zapytaniami o scieżki. Mamy możliwosć z korzy
 
 Nie musimy implementować również podstawowych algorytmów taki jak np. BFS. Możliwosci przechodzenia po grafie są szczegółowo omówione [tutaj](https://docs.arangodb.com/3.13/aql/graphs/traversals/).
 
+Przy podawaniu parametrów, np. jak w tym AQL:
+
+```aql
+FOR path
+IN 1..10000 OUTBOUND K_PATHS 
+@start_vertex TO @end_vertex
+GRAPH 'graph'
+OPTIONS {
+    uniqueVertices: 'path',
+}
+RETURN {
+    vertices: (
+        FOR vertex IN path.vertices
+            RETURN {
+                key: vertex._key,
+                title: vertex.title
+            }
+    ),
+    edges: LENGTH(path.edges),
+    weight: path.weight
+}
+
+```
+
+`IN 1..10000` mówi nam o głębokosci poszukiwań scieżek (maksymalna długosć znalezionych scieżek). Dla parametru `1..50` zapytanie już wykonuje się długo (około 23minuty). Natomiast podanie takiej wartosci skutkuje błędem bazy o przekroczeniu dostępnej pamięci. Efekt jest bardziej zauważalny przy niewygodnych wierzchołkach z wieloma sąsiadami.
+
 ## Strategie przyszłego łagodzenia zidentyfikowanych niedociągnięć
 
 Z możliwosci dalszych postępów nad projektem, na pewno zidentyfikowałbym:
