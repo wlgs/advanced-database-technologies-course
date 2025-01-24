@@ -1,0 +1,75 @@
+Zaawansowane technologie bazodanowe 
+Mikołaj Wielgos 
+Lab7 
+ 
+Ćw. 1. Publikacja XML
+
+CREATE TABLE 
+    kompozycje ( 
+        idkompozycji CHAR(5) NOT NULL, 
+        nazwa VARCHAR(40) NOT NULL, 
+        opis VARCHAR(100), 
+        cena NUMERIC(7, 2), 
+        minimum INTEGER, 
+        stan INTEGER 
+    );
+
+
+SELECT
+    xmlelement (
+        name flowers,
+        xmlagg (
+            xmlelement (
+                name bouquet,
+                xmlattributes (idkompozycji as id, stan as quant, cena as price),
+                xmlelement (name name, nazwa),
+                xmlelement (name description, opis)
+            )
+        )
+    )
+FROM
+    kompozycje
+WHERE
+    stan > 4;
+
+
+
+Ćw. 3. Przetwarzanie XML
+
+
+#!/bin/bash
+
+for i in *.xml
+do
+    XML_CONTENT=$(cat "$i" | sed "s/'/''/g")
+    
+    echo "INSERT INTO printers (name, description) VALUES ('$i', '$XML_CONTENT');"
+done
+
+chmod +x ./script.sh && ./script.sh >> printers.sql && psql -U postgres -a -f printers.sql
+
+SELECT 
+    name,
+    (xpath('//printer/mechanism/resolution/dpi/x/text()', description))[1] as resolution
+FROM printers;
+
+SELECT 
+    name,
+    (xpath('//printer/mechanism/resolution/dpi/x/text()', description))[1] as resolution
+FROM printers
+ORDER BY (xpath('//printer/mechanism/resolution/dpi/x/text()', description))[1]::text ASC;
+
+SELECT 
+    name,
+    (xpath('//printer/mechanism/resolution/dpi/x/text()', description))[1] as resolution
+FROM printers
+ORDER BY CAST((xpath('//printer/mechanism/resolution/dpi/x/text()', description))[1]::text AS INTEGER) ASC;
+
+SELECT 
+    name
+FROM printers
+WHERE 
+    xpath_exists('//printer/mechanism/color', description) 
+    AND 
+    CAST((xpath('//printer/mechanism/resolution/dpi/x/text()', description))[1]::text AS INTEGER) > 1200;
+
